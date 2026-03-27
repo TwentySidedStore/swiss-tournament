@@ -105,8 +105,10 @@ Persistence via `localStorage` — `JSON.stringify(state)` after every state cha
   tournamentStarted: false,
   tournamentComplete: false,
   maxRounds: null,          // set by TO at start (default: min(3, ceil(log2(n))))
+  nextId: 1,                // autoincrement for player IDs
+  nextMatchId: 1,           // autoincrement for match IDs
   tournamentName: "",       // set during registration
-  tournamentDate: ""        // set during registration (auto-filled to today)
+  tournamentDate: "",       // auto-filled to today in initial state
 }
 ```
 
@@ -148,6 +150,7 @@ All stats are derived from match data:
 ### Match
 ```
 {
+  id: number,                     // unique, from nextMatchId
   player1Id: number,
   player2Id: number | null,     // null for bye/assigned_loss
   type: "normal" | "bye" | "assigned_loss",

@@ -1,6 +1,6 @@
 # Twenty Sided Swiss
 
-Swiss tournament pairing and scoring for Magic: The Gathering. Built for [Twenty Sided Store](https://twentysidedgames.com).
+Swiss tournament pairing and scoring for Magic: The Gathering. Built by [Twenty Sided](https://twentysidedstore.com).
 
 **Live:** https://twentysidedstore.github.io/swiss-tournament/
 
