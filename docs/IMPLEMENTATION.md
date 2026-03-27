@@ -54,8 +54,6 @@ swiss-tournament/
 ├── index.html
 ├── package.json
 ├── vite.config.js
-├── tailwind.config.js
-├── postcss.config.js
 ├── CLAUDE.md
 ├── README.md
 └── .github/
@@ -212,11 +210,11 @@ recommendedRounds(n) → number  // ceil(log2(n))
 defaultRounds(n) → number  // min(3, recommendedRounds(n))
 ```
 
-### `generateRound1Pairings(players)`
+### `generateRound1Pairings(players, startMatchId)`
 
 ```js
 // engine/pairing.js
-generateRound1Pairings(players) → Match[]
+generateRound1Pairings(players, startMatchId) → { matches: Match[], nextMatchId: number }
 ```
 
 1. Shuffle players randomly.
@@ -224,29 +222,32 @@ generateRound1Pairings(players) → Match[]
 3. Pair sequentially: [0,1], [2,3], etc.
 4. Convert BYE_PHANTOM pairs to bye matches.
 
-Each match gets a unique `id` (see Match data model below).
+Each match gets a unique `id` starting from `startMatchId`. Returns the updated `nextMatchId` so the reducer can store it.
 
 **Test cases:**
 - Even players: all normal matches, no bye
 - Odd players: one bye match, bye player is last after shuffle
 - 2 players: one match
 - Resulting matches have correct structure (`{ id, player1Id, player2Id, type, games }`)
+- Match IDs are sequential starting from startMatchId
 
-### `generateRoundNPairings(players, completedRounds, playerStatsMap)`
+### `generateRoundNPairings(players, completedRounds, startMatchId)`
 
 ```js
 // engine/pairing.js
-generateRoundNPairings(players, completedRounds, playerStatsMap) → Match[]
+generateRoundNPairings(players, completedRounds, startMatchId) → { matches: Match[], nextMatchId: number }
 ```
+
+Computes player stats internally (imports `computePlayerStats` from stats engine) — no need for the caller to pass a pre-computed stats map.
 
 Full algorithm per PLAN.md:
 1. Build pool (+ BYE_PHANTOM if odd)
 2. Build faced map from completed rounds
-3. Sort by match points desc, shuffle within groups, BYE_PHANTOM at bottom (-Infinity)
+3. Sort by match points desc (computed internally), shuffle within groups, BYE_PHANTOM at bottom (-Infinity)
 4. Backtracking pairer
 5. Fallback: if backtracking returns null, re-run without constraints (allow rematches)
 
-Always returns Match[] — never null. The fallback guarantees pairings are always produced. Rematches in the fallback are visible in the pairing editor via inline rematch warnings (no separate warning mechanism needed).
+Always returns matches — never null. The fallback guarantees pairings are always produced. Rematches in the fallback are visible in the pairing editor via inline rematch warnings (no separate warning mechanism needed). Returns `nextMatchId` for the reducer to store.
 
 **Test cases:**
 - 4 players, round 2: no rematches
@@ -748,10 +749,10 @@ Props: isOpen: boolean, message: string, confirmLabel: string,
 Each step: write tests → implement → verify tests pass → commit.
 
 ### Step 1: Project Setup
-**Files:** `package.json`, `vite.config.js`, `tailwind.config.js`, `postcss.config.js`, `index.html`, `src/main.jsx`, `src/styles/tokens.css`, `src/components/ui/Modal.jsx`, `src/components/ui/ConfirmDialog.jsx`, `.github/workflows/deploy.yml`
-- `npm create vite@latest . -- --template react`
-- Install: `tailwindcss`, `postcss`, `autoprefixer`, `vitest`, `@testing-library/react`, `@testing-library/jest-dom`, `jsdom`
-- Configure Tailwind with dark theme, color tokens as CSS custom properties in `tokens.css`
+**Files:** `package.json`, `vite.config.js`, `index.html`, `src/main.jsx`, `src/styles/tokens.css`, `src/components/ui/Modal.jsx`, `src/components/ui/ConfirmDialog.jsx`, `.github/workflows/deploy.yml`
+- Init project, install: `react`, `react-dom`, `vite`, `@vitejs/plugin-react`, `tailwindcss`, `@tailwindcss/vite`, `vitest`, `@testing-library/react`, `@testing-library/jest-dom`, `jsdom`
+- Tailwind v4 uses CSS-based config via `@theme` in `tokens.css` — no `tailwind.config.js` or `postcss.config.js` needed
+- Color tokens, fonts, and theme defined in `src/styles/tokens.css`
 - Google Fonts in `index.html`
 - `vite.config.js`: `base: '/swiss-tournament/'`, `test: { environment: 'jsdom' }`
 - Build Modal.jsx and ConfirmDialog.jsx early — they're needed by Step 3 (RoundCountSelector) and Step 9+ (confirmations)

@@ -39,3 +39,83 @@
   --font-body: 'DM Sans', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
+
+/* Cursor pointer on all buttons and clickable elements */
+button, [role="tab"], summary {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* Button press feedback */
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Smooth transitions */
+button, a, input, textarea {
+  transition: color 0.1s, background-color 0.1s, border-color 0.1s, opacity 0.1s;
+}
+
+/* Global focus indicators — high contrast outline */
+*:focus-visible {
+  outline: 2px solid var(--color-gold-primary);
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print stylesheet */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  header, footer, button, [role="tablist"],
+  .no-print {
+    display: none !important;
+  }
+
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  th, td {
+    border: 1px solid #ccc !important;
+    padding: 4px 8px !important;
+    color: black !important;
+    background: white !important;
+  }
+
+  th {
+    font-weight: bold !important;
+    background: #f0f0f0 !important;
+  }
+
+  .print-header {
+    display: block !important;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  * {
+    position: static !important;
+  }
+
+  @page {
+    margin: 1cm;
+  }
+}

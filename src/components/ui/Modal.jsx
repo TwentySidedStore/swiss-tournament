@@ -28,7 +28,7 @@ export default function Modal({ isOpen, onClose, title, children }) {
   return (
     <dialog
       ref={dialogRef}
-      className="bg-bg-elevated text-text-primary rounded-lg shadow-xl border border-gold-dim backdrop:bg-black/60 p-0 max-w-md w-full"
+      className="bg-bg-elevated text-text-primary rounded-lg shadow-xl border border-gold-dim backdrop:bg-black/60 p-0 max-w-md w-full mx-auto my-auto open:flex open:flex-col fixed inset-0 m-auto h-fit"
       onClick={(e) => {
         if (e.target === dialogRef.current) onClose()
       }}
