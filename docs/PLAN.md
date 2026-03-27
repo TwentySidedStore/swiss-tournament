@@ -1,7 +1,7 @@
 # Twenty Sided Swiss Pairings — Plan
 
 ## Overview
-A single-file browser app (`index.html`) for running a Swiss tournament for Magic: The Gathering. Up to 11 players, max 3 rounds, full MTR-compliant scoring and tiebreakers. Plain HTML + CSS + vanilla JS, no frameworks, no build step.
+A single-file browser app (`index.html`) for running a Swiss tournament for Magic: The Gathering. Up to 256 players, up to 8 rounds (configurable), full MTR-compliant scoring and tiebreakers. Plain HTML + CSS + vanilla JS, no frameworks, no build step.
 
 ---
 
@@ -23,7 +23,7 @@ state = {
   currentTab: "rounds", // "rounds" | "standings"
   tournamentStarted: false,
   tournamentComplete: false,
-  maxRounds: 0,         // calculated at start
+  maxRounds: 0,         // set by TO at start (default: min(3, ceil(log2(n))))
   editingPairings: false // swap mode toggle
 }
 ```
@@ -103,10 +103,19 @@ A player's bye counts toward THEIR stats (3 match points, 6 game points, 2 games
 
 ## Round Count
 
-`min(ceil(log2(playerCount)), 3)`:
+**Recommended rounds** = `ceil(log2(playerCount))`:
 - 2 players → 1 round
 - 3–4 players → 2 rounds
-- 5–11 players → 3 rounds
+- 5–8 players → 3 rounds
+- 9–16 players → 4 rounds
+- 17–32 players → 5 rounds
+- 33–64 players → 6 rounds
+- 65–128 players → 7 rounds
+- 129–256 players → 8 rounds
+
+**Default rounds** = `min(3, recommended)` — covers the common LGS case. TO can adjust up to the recommended value before starting.
+
+At tournament start, a round-count selector appears (dropdown or stepper), pre-filled with the default. The TO confirms or adjusts, then pairings generate.
 
 ---
 
@@ -117,7 +126,7 @@ A player's bye counts toward THEIR stats (3 match points, 6 game points, 2 games
 2. If odd number → last shuffled player gets a bye
 3. Pair sequentially: [0,1], [2,3], etc.
 
-### Rounds 2–3
+### Rounds 2+
 1. **Bye (if odd):** Among players without a bye, pick the one with the fewest match points. Ties broken randomly. Award bye (auto 2-0).
 2. **Sort remaining** by match points descending. Shuffle within each point group.
 3. **Greedy pair with backtracking:** From top, pair each player with the next available player they haven't faced. If no valid opponent in same point group, pair down. If stuck, backtrack and retry previous match with alternate pairing.
@@ -137,8 +146,9 @@ A player's bye counts toward THEIR stats (3 match points, 6 game points, 2 games
 ### Phase 1: Player Registration
 - Text input + Add button (Enter key also adds)
 - Player list with remove buttons
-- Min 2, max 11 players
-- "Start Tournament" locks roster, calculates round count, generates Round 1 pairings
+- Min 2, max 256 players
+- "Start Tournament" locks roster, shows round-count selector (default: min(3, recommended)), TO confirms
+- Confirming round count generates Round 1 pairings
 
 ### Phase 2: Tournament — Two Tabs
 
