@@ -1,4 +1,6 @@
-export default function PlayerList({ players, onRemove, readOnly }) {
+import EditableName from '../ui/EditableName'
+
+export default function PlayerList({ players, onRemove, onEdit, readOnly }) {
   if (players.length === 0) return null
 
   return (
@@ -8,9 +10,13 @@ export default function PlayerList({ players, onRemove, readOnly }) {
           key={player.id}
           className="flex items-center justify-between bg-bg-surface rounded px-3 py-2 group"
         >
-          <span className="text-text-primary">
+          <span className="inline-flex items-center">
             <span className="text-text-muted text-sm mr-2">{index + 1}.</span>
-            {player.name}
+            {onEdit ? (
+              <EditableName name={player.name} onSave={(name) => onEdit(player.id, name)} />
+            ) : (
+              <span className="text-text-primary">{player.name}</span>
+            )}
           </span>
           {!readOnly && (
             <button

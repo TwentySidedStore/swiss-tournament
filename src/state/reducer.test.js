@@ -462,3 +462,46 @@ describe('id field', () => {
     expect(state.players).toEqual([])
   })
 })
+
+describe('EDIT_PLAYER', () => {
+  it('updates the correct player name', () => {
+    let state = initialState()
+    state = dispatch(state, { type: Actions.ADD_PLAYER, name: 'Alice' })
+    state = dispatch(state, { type: Actions.ADD_PLAYER, name: 'Bob' })
+    state = dispatch(state, { type: Actions.EDIT_PLAYER, playerId: 1, name: 'Alicia' })
+    expect(state.players[0].name).toBe('Alicia')
+    expect(state.players[1].name).toBe('Bob')
+  })
+
+  it('trims whitespace', () => {
+    let state = initialState()
+    state = dispatch(state, { type: Actions.ADD_PLAYER, name: 'Alice' })
+    state = dispatch(state, { type: Actions.EDIT_PLAYER, playerId: 1, name: '  Carol  ' })
+    expect(state.players[0].name).toBe('Carol')
+  })
+
+  it('is a no-op for empty name after trim', () => {
+    let state = initialState()
+    state = dispatch(state, { type: Actions.ADD_PLAYER, name: 'Alice' })
+    state = dispatch(state, { type: Actions.EDIT_PLAYER, playerId: 1, name: '   ' })
+    expect(state.players[0].name).toBe('Alice')
+  })
+
+  it('is a no-op for non-existent playerId', () => {
+    let state = initialState()
+    state = dispatch(state, { type: Actions.ADD_PLAYER, name: 'Alice' })
+    const before = [...state.players]
+    state = dispatch(state, { type: Actions.EDIT_PLAYER, playerId: 999, name: 'Ghost' })
+    expect(state.players).toEqual(before)
+  })
+
+  it('works during tournament', () => {
+    let state = initialState()
+    state = dispatch(state, { type: Actions.ADD_PLAYER, name: 'Alice' })
+    state = dispatch(state, { type: Actions.ADD_PLAYER, name: 'Bob' })
+    state = dispatch(state, { type: Actions.START_TOURNAMENT, maxRounds: 1 })
+    state = dispatch(state, { type: Actions.EDIT_PLAYER, playerId: 1, name: 'Alicia' })
+    expect(state.players[0].name).toBe('Alicia')
+    expect(state.tournamentStarted).toBe(true)
+  })
+})

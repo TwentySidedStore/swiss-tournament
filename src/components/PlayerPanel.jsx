@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Modal from './ui/Modal'
+import EditableName from './ui/EditableName'
 
 export default function PlayerPanel({
   players,
@@ -7,6 +8,7 @@ export default function PlayerPanel({
   isOpen,
   onClose,
   onAddLatePlayer,
+  onEditPlayer,
   tournamentStarted,
   activeRoundHasBye,
 }) {
@@ -65,8 +67,8 @@ export default function PlayerPanel({
           {players.map((player) => {
             const stats = playerStats?.get(player.id)
             return (
-              <li key={player.id} className="flex items-center justify-between px-2 py-1 text-sm">
-                <span className="text-text-primary">{player.name}</span>
+              <li key={player.id} className="flex items-center justify-between px-2 py-1 text-sm group">
+                <EditableName name={player.name} onSave={(name) => onEditPlayer(player.id, name)} />
                 {stats && stats.roundsCompleted > 0 && (
                   <span className="text-text-muted">{formatRecord(stats)}</span>
                 )}

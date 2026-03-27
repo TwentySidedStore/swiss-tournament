@@ -56,6 +56,7 @@ export default function Registration({ players, tournamentName, tournamentDate, 
         <PlayerList
           players={players}
           onRemove={(playerId) => dispatch({ type: Actions.REMOVE_PLAYER, playerId })}
+          onEdit={(playerId, name) => dispatch({ type: Actions.EDIT_PLAYER, playerId, name })}
           readOnly={false}
         />
       </div>

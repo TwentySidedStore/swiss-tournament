@@ -11,6 +11,7 @@ export default function Header({
   activeRoundHasBye,
   onBackToEvents,
   onAddLatePlayer,
+  onEditPlayer,
   onPrint,
 }) {
   const [showPlayerPanel, setShowPlayerPanel] = useState(false)
@@ -58,6 +59,7 @@ export default function Header({
         players={players ?? []}
         playerStats={playerStats}
         onAddLatePlayer={onAddLatePlayer}
+        onEditPlayer={onEditPlayer}
         tournamentStarted={tournamentStarted}
         activeRoundHasBye={activeRoundHasBye}
       />

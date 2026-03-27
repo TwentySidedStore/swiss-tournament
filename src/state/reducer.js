@@ -36,6 +36,18 @@ export function tournamentReducer(state, action) {
       }
     }
 
+    case Actions.EDIT_PLAYER: {
+      const trimmed = action.name?.trim()
+      if (!trimmed) return state
+      if (!state.players.some((p) => p.id === action.playerId)) return state
+      return {
+        ...state,
+        players: state.players.map((p) =>
+          p.id === action.playerId ? { ...p, name: trimmed } : p,
+        ),
+      }
+    }
+
     case Actions.REMOVE_PLAYER: {
       if (state.tournamentStarted) return state
       return {

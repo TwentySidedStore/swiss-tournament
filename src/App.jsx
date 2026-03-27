@@ -134,6 +134,9 @@ export default function App() {
         onAddLatePlayer={({ name, currentRoundAction }) =>
           tournamentDispatch({ type: Actions.ADD_LATE_PLAYER, name, currentRoundAction })
         }
+        onEditPlayer={(playerId, name) =>
+          tournamentDispatch({ type: Actions.EDIT_PLAYER, playerId, name })
+        }
         onPrint={() => window.print()}
       />
 
