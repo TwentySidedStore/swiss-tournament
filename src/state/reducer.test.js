@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { tournamentReducer, initialState } from './reducer'
+import { tournamentReducer, initialState, newTournamentState } from './reducer'
 import { Actions } from './actions'
 
 function dispatch(state, action) {
@@ -434,5 +434,31 @@ describe('NEW_TOURNAMENT', () => {
     expect(state.tournamentStarted).toBe(false)
     expect(state.nextId).toBe(1)
     expect(state.nextMatchId).toBe(1)
+  })
+})
+
+describe('LOAD', () => {
+  it('replaces entire state', () => {
+    const loaded = { ...initialState(), id: 5, players: [{ id: 1, name: 'Alice' }] }
+    const state = dispatch(initialState(), { type: 'LOAD', state: loaded })
+    expect(state.id).toBe(5)
+    expect(state.players).toHaveLength(1)
+  })
+
+  it('returns null when state is null', () => {
+    const state = dispatch(initialState(), { type: 'LOAD', state: null })
+    expect(state).toBeNull()
+  })
+})
+
+describe('id field', () => {
+  it('is present in initial state as null', () => {
+    expect(initialState().id).toBeNull()
+  })
+
+  it('is set by newTournamentState factory', () => {
+    const state = newTournamentState(42)
+    expect(state.id).toBe(42)
+    expect(state.players).toEqual([])
   })
 })

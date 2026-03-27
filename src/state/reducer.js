@@ -1,8 +1,13 @@
 import { Actions } from './actions'
 import { generateRound1Pairings, generateRoundNPairings } from '../engine/pairing'
 
+export function newTournamentState(id) {
+  return { ...initialState(), id }
+}
+
 export function initialState() {
   return {
+    id: null,
     players: [],
     rounds: [],
     nextId: 1,
@@ -20,6 +25,8 @@ export function initialState() {
 
 export function tournamentReducer(state, action) {
   switch (action.type) {
+    case 'LOAD':
+      return action.state
     case Actions.ADD_PLAYER: {
       if (state.players.length >= 256) return state
       return {
