@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* Backgrounds */
+  --color-bg-base: #0f0f1a;
+  --color-bg-surface: #1a1a2e;
+  --color-bg-elevated: #1f2040;
+  --color-bg-overlay: #252548;
+
+  /* Gold scale */
+  --color-gold-dim: #7a5c1a;
+  --color-gold-muted: #a37828;
+  --color-gold-mid: #c9952b;
+  --color-gold-primary: #d4a841;
+  --color-gold-bright: #e8c060;
+
+  /* Semantic */
+  --color-win: #4ade80;
+  --color-win-dim: #166534;
+  --color-loss: #f87171;
+  --color-loss-dim: #7f1d1d;
+  --color-draw: #94a3b8;
+  --color-draw-dim: #334155;
+  --color-warning: #fbbf24;
+  --color-warning-dim: #78350f;
+  --color-bye: #818cf8;
+  --color-bye-dim: #3730a3;
+
+  /* Text */
+  --color-text-primary: #e8e8f0;
+  --color-text-secondary: #a0a0bc;
+  --color-text-muted: #606080;
+  --color-text-disabled: #3d3d5c;
+
+  /* Fonts */
+  --font-display: 'Cinzel', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
