@@ -105,6 +105,12 @@ export default function App() {
     prevRoundsLen.current = len
   }, [tournamentState?.rounds?.length, tournamentState?.tournamentComplete])
 
+  // Dynamic page title
+  useEffect(() => {
+    const name = tournamentState?.tournamentName
+    document.title = name ? `${name} — Twenty Sided Swiss` : 'Twenty Sided Swiss'
+  }, [tournamentState?.tournamentName])
+
   // --- Render ---
 
   // Index view
